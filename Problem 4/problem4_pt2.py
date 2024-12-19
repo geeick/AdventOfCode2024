@@ -32,16 +32,32 @@ def count_xmas_in_grid(file_path):
         print(f"Error reading file: {e}")
         return 0
 
-    word = "XMAS"
     count = 0
 
     rows, cols = len(board), len(board[0])
 
-    for x in range(rows):
-        for y in range(cols):
-            if board[x][y] == word[0]:  # Start search if the first letter matches
-                for dx, dy in directions:
-                    if search_in_direction(board, x, y, dx, dy, word):
+    for x in range(rows - 1):
+        for y in range(cols - 1):
+            if board[x][y] :  # Start search if the first letter matches
+                    if (board[x-1][y-1] == 'M' and
+                        board[x-1][y+1] == 'S' and
+                        board[x+1][y-1] == 'M' and
+                        board[x+1][y+1] == 'S'):
+                        count += 1
+                    if (board[x-1][y-1] == 'S' and
+                        board[x-1][y+1] == 'M' and
+                        board[x+1][y-1] == 'S' and
+                        board[x+1][y+1] == 'M'):
+                        count += 1
+                    if (board[x-1][y-1] == 'M' and
+                        board[x-1][y+1] == 'M' and
+                        board[x+1][y-1] == 'S' and
+                        board[x+1][y+1] == 'S'):
+                        count += 1
+                    if (board[x-1][y-1] == 'S' and
+                        board[x-1][y+1] == 'S' and
+                        board[x+1][y-1] == 'M' and
+                        board[x+1][y+1] == 'M'):
                         count += 1
 
     print(f"Total 'XMAS' occurrences: {count}")
