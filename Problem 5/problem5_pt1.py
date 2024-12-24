@@ -39,12 +39,13 @@ def processfile(file_path):
         in_degree = defaultdict(int) #counts the number of edges directed towards a node
 
         all_pages = set(update)  # Use only pages from the current update
-        for rule in rulesProcessor:
+        filtered_rules = [rule for rule in rulesProcessor if int(rule[0]) in all_pages and int(rule[1]) in all_pages]
+
+        for rule in filtered_rules:
             X, Y = map(int, rule)
-            # Only add the rule to the graph if both X and Y are in the current update
-            if X in all_pages and Y in all_pages:
-                graph[X].add(Y)
-                in_degree[Y] += 1
+            #only add the rule to the graph if both X and Y are in the current update
+            graph[X].add(Y)
+            in_degree[Y] += 1
         
         # If a page has no in_degrees, make in degree of zero
         for page in all_pages:
@@ -55,12 +56,12 @@ def processfile(file_path):
 
 
     def is_valid_update(update):
-        graph, in_degree = make_graph(update)  # Create the graph for this specific update
+        graph, in_degree = make_graph(update)  #create the graph for this specific update
         seen = set() #make a set to keep track of pages already seen
         for i in range(len(update)):
             current_page = update[i]
             for previous_page in seen: #if the current page was supposed to come after a previous_page then the update is invalid
-                if previous_page in graph and current_page in graph[previous_page]:
+                if current_page in graph and previous_page in graph[current_page]:
                     return False
             seen.add(current_page)
         return True
@@ -70,15 +71,15 @@ def processfile(file_path):
     for update in updatesProcessor: #if a update is valid, add it's middle value
         if is_valid_update(update):
             mid_index = len(update) // 2
-            middle_page = sorted(update)[mid_index]
+            middle_page = update[mid_index]
             valid_middle_sum += middle_page
+            print(middle_page)
     
     return valid_middle_sum
             
     
 file_path = "/Users/georgiaeick/Library/Mobile Documents/com~apple~TextEdit/Documents/AdventOfCode_Problem5.txt"
 file_path_example = '/Users/georgiaeick/Library/Mobile Documents/com~apple~TextEdit/Documents/AdventOfCode_Problem5Ex.txt'
-processfile(file_path)
 
-result = processfile(file_path_example)
+result = processfile(file_path)
 print(f"Sum of middle pages: {result}")
