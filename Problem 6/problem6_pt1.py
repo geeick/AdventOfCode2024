@@ -12,19 +12,22 @@ def define_guard_path(file_path):
 
     rows, cols = len(board), len(board[0])
     count = 0
+    posx, posy = -1, -1
 
-    for x in range(rows - 1):
+    for x in range(rows):
         for y in range(cols):
             if board[x][y] == '^' or board[x][y] == '>' or board[x][y] == '<' or board[x][y] == 'V':
                 posx = x
                 posy = y
                 break
+        if posx != -1:  # Found a guard, exit loop
+            break
             
-    while posx < len(board) -1 and posy < len(board[0]) -1 and x >= 0 and y >= 0: 
+    while 0 < posx < rows -1 and 0 < posy < cols - 1:
             if board[posx][posy] == '^':
                 if board[posx-1][posy] != '#':
 
-                    if board[posx-1][posy] != 'X':
+                    if board[posx-1][posy] == '.':
                         count += 1
 
                     board[posx-1][posy] = '^'
@@ -38,7 +41,7 @@ def define_guard_path(file_path):
             elif board[posx][posy] == '>':
                 if board[posx][posy+1] != '#':
 
-                    if board[posx][posy+1] != 'X':
+                    if board[posx][posy+1] == '.':
                         count += 1
 
                     board[posx][posy+1] = '>'
@@ -52,7 +55,7 @@ def define_guard_path(file_path):
             elif board[posx][posy] == 'v':
                 if board[posx+1][posy] != '#':
 
-                    if board[posx+1][posy] != 'X':
+                    if board[posx+1][posy] == '.':
                         count += 1
 
                     board[posx+1][posy] = 'v'
@@ -62,9 +65,9 @@ def define_guard_path(file_path):
 
                 elif board[posx+1][posy] == '#':
                     board[posx][posy] = '<' 
-            elif board[posx][posy] == '<':
 
-                if board[posx][posy-1] != 'X':
+            elif board[posx][posy] == '<':
+                if board[posx][posy-1] == '.':
                         count += 1
 
                 if board[posx][posy-1] != '#':
@@ -76,8 +79,7 @@ def define_guard_path(file_path):
                 elif board[posx][posy-1] == '#':
                     board[posx][posy] = '^'                           
 
-    print(f"Total guard steps: {count}")
-    return count
+    return count + 1
 
 file_path = "/Users/georgiaeick/Library/Mobile Documents/com~apple~TextEdit/Documents/AdventOfCode_Problem6.txt"
 file_path_example = '/Users/georgiaeick/Library/Mobile Documents/com~apple~TextEdit/Documents/AdventOfCode_Problem6Ex.txt'
