@@ -65,4 +65,4 @@ def define_guard_path(file_path):
 
 file_path = "/Users/georgiaeick/Library/Mobile Documents/com~apple~TextEdit/Documents/AdventOfCode_Problem6.txt"
 file_path_example = '/Users/georgiaeick/Library/Mobile Documents/com~apple~TextEdit/Documents/AdventOfCode_Problem6Ex.txt'
-print(define_guard_path(file_path_example))
+print(define_guard_path(file_path))

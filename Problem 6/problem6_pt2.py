@@ -12,81 +12,109 @@ def define_guard_path(file_path):
 
     rows, cols = len(board), len(board[0])
     count = 0
-    count2 = 0
     posx, posy = -1, -1
 
+    def translate_dir(dir):
+        if dir == '^':
+            return "UP"
+        if dir == '>':
+            return "RIGHT"  
+        if dir == 'v':
+            return "DOWN"
+        if dir == '<':
+            return "LEFT"
+        else:
+            return dir
+          
+    dir = "UP"
     for x in range(rows):
         for y in range(cols):
-            if board[x][y] == '^' or board[x][y] == '>' or board[x][y] == '<' or board[x][y] == 'V':
+            if board[x][y] == '^':
                 posx = x
                 posy = y
+                dir = "UP"
+            if board[x][y] == '>' :
+                posx = x
+                posy = y
+                dir = "RIGHT"
+            if board[x][y] == '<' :
+                posx = x
+                posy = y
+                dir = "LEFT"
+            if board[x][y] == 'V':
+                posx = x
+                posy = y
+                dir = "DOWN"
                 break
         if posx != -1:  # Found a guard, exit loop
             break
 
-    def determine_next_pos(posx, posy, count, count2):
-
-        if board[posx][posy] == '^':
+    def search_next_hash(posx, posy, count, dir):
+        if translate_dir(board[posx][posy]) == "UP":
             if board[posx-1][posy] != '#':
                 for column in range (posy, cols):
                     if board[posx-1][column] == '#':
                         if board[posx-1][column -1] == 'X':
                             count += 1
-                        break
+                            break
+                        else:
+                            search_next_hash(posx-1, column -1, count, "RIGHT")
                 board[posx-1][posy] = '^'
                 board[posx][posy] = 'X'
                 posx -= 1
             elif board[posx-1][posy] == '#':
                 board[posx][posy] = '>'
-                count2 += 1
 
-        elif board[posx][posy] == '>':
+        elif translate_dir(board[posx][posy]) == "RIGHT":
             if board[posx][posy+1] != '#':
                 for row in range (posx, rows):
                     if board[row][posy+1] == '#':
                         if board[row -1][posy+1] == 'X':
                             count += 1
-                        break
+                            break
+                        else:
+                            search_next_hash(row-1, posy +1, count, "DOWN")
                 board[posx][posy+1] = '>'
                 board[posx][posy] = 'X'
                 posy += 1                    
             elif board[posx][posy+1] == '#':
                 board[posx][posy] = 'v'
-                count2 += 1
 
-        elif board[posx][posy] == 'v':
+        elif translate_dir(board[posx][posy]) == "DOWN":
             if board[posx+1][posy] != '#':
                 for column in range (posy, -1, -1):
                     if board[posx+1][column] == '#':
                         if board[posx+1][column +1] == 'X':
                             count += 1
-                        break
+                            break
+                        else:
+                            search_next_hash(posx+1, column+1, count,  "LEFT")
                 board[posx+1][posy] = 'v'
                 board[posx][posy] = 'X'
                 posx += 1
             elif board[posx+1][posy] == '#':
                 board[posx][posy] = '<' 
-                count2 += 1
 
-        elif board[posx][posy] == '<':
+        elif translate_dir(board[posx][posy]) == "LEFT":
             if board[posx][posy-1] != '#':
                 for row in range (posx, -1, -1):
                     if board[row][posy -1] == '#':
                         if board[row + 1][posy -1] == 'X':
                             count += 1
-                        break
+                            break
+                        else:
+                            search_next_hash(row +1, posy -1, count, "UP")
             if board[posx][posy-1] != '#':
                 board[posx][posy-1] = '<'
                 board[posx][posy] = 'X'
                 posy -= 1
             elif board[posx][posy-1] == '#':
                 board[posx][posy] = '^'
-                count2 += 1
 
-        return posx, posy, count, count2
+        return posx, posy, count
 
     while 0 < posx < rows -1 and 0 < posy < cols - 1:
-        posx, posy, count, count2 = determine_next_pos(posx, posy, count, count2)               
+        posx, posy, count = search_next_hash(posx, posy, count, dir)               
 
     result = count
     return result
