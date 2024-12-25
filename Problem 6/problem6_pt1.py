@@ -1,5 +1,4 @@
 def define_guard_path(file_path):
-
     try:
         with open(file_path, 'r') as file:
             board = [list(line.strip()) for line in file.readlines()]
