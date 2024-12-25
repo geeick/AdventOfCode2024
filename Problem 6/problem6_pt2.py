@@ -14,17 +14,17 @@ def define_guard_path(file_path):
     count = 0
     posx, posy = -1, -1
 
-    def translate_dir(dir):
-        if dir == '^':
+    def translate_dir(char):
+        if char == '^':
             return "UP"
-        if dir == '>':
+        if char == '>':
             return "RIGHT"  
-        if dir == 'v':
+        if char == 'v':
             return "DOWN"
-        if dir == '<':
+        if char == '<':
             return "LEFT"
         else:
-            return dir
+            return char
           
     dir = "UP"
     for x in range(rows):
@@ -46,21 +46,24 @@ def define_guard_path(file_path):
                 posy = y
                 dir = "DOWN"
                 break
-        if posx != -1:  # Found a guard, exit loop
+        if posx != -1:  
             break
+
+    seen = set()
 
     def search_next_hash(posx, posy, count, dir):
         if translate_dir(board[posx][posy]) == "UP":
             if board[posx-1][posy] != '#':
                 for column in range (posy, cols):
                     if board[posx-1][column] == '#':
-                        if board[posx-1][column -1] == 'X':
+                        if (posx-1, column -1, "DOWN") in seen:
                             count += 1
                             break
                         else:
                             search_next_hash(posx-1, column -1, count, "RIGHT")
                 board[posx-1][posy] = '^'
                 board[posx][posy] = 'X'
+                seen.add((posx, posy, "UP"))
                 posx -= 1
             elif board[posx-1][posy] == '#':
                 board[posx][posy] = '>'
@@ -69,13 +72,14 @@ def define_guard_path(file_path):
             if board[posx][posy+1] != '#':
                 for row in range (posx, rows):
                     if board[row][posy+1] == '#':
-                        if board[row -1][posy+1] == 'X':
+                        if (row -1, posy+1, "LEFT") in seen:
                             count += 1
                             break
                         else:
                             search_next_hash(row-1, posy +1, count, "DOWN")
                 board[posx][posy+1] = '>'
                 board[posx][posy] = 'X'
+                seen.add((posx, posy, "RIGHT"))
                 posy += 1                    
             elif board[posx][posy+1] == '#':
                 board[posx][posy] = 'v'
@@ -84,13 +88,14 @@ def define_guard_path(file_path):
             if board[posx+1][posy] != '#':
                 for column in range (posy, -1, -1):
                     if board[posx+1][column] == '#':
-                        if board[posx+1][column +1] == 'X':
+                        if (posx+1, column +1, "UP") in seen:
                             count += 1
                             break
                         else:
                             search_next_hash(posx+1, column+1, count,  "LEFT")
                 board[posx+1][posy] = 'v'
                 board[posx][posy] = 'X'
+                seen.add((posx, posy, "DOWN"))
                 posx += 1
             elif board[posx+1][posy] == '#':
                 board[posx][posy] = '<' 
@@ -99,7 +104,7 @@ def define_guard_path(file_path):
             if board[posx][posy-1] != '#':
                 for row in range (posx, -1, -1):
                     if board[row][posy -1] == '#':
-                        if board[row + 1][posy -1] == 'X':
+                        if (row + 1, posy -1, "RIGHT") in seen:
                             count += 1
                             break
                         else:
@@ -107,6 +112,7 @@ def define_guard_path(file_path):
             if board[posx][posy-1] != '#':
                 board[posx][posy-1] = '<'
                 board[posx][posy] = 'X'
+                seen.add((posx, posy, "LEFT"))
                 posy -= 1
             elif board[posx][posy-1] == '#':
                 board[posx][posy] = '^'
@@ -114,7 +120,12 @@ def define_guard_path(file_path):
         return posx, posy, count
 
     while 0 < posx < rows -1 and 0 < posy < cols - 1:
-        posx, posy, count = search_next_hash(posx, posy, count, dir)               
+        posx, posy, count = search_next_hash(posx, posy, count, dir)       
+
+    for line in board:
+        for char in line:
+            print(char, end = "")
+        print('\n')             
 
     result = count
     return result
