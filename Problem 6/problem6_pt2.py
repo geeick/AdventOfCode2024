@@ -1,3 +1,5 @@
+loops = set()
+
 def is_loop(file_path, posx, posy, dir, seen):
     try:
         with open(file_path, 'r') as file:
@@ -10,7 +12,7 @@ def is_loop(file_path, posx, posy, dir, seen):
         return 0
 
     rows, cols = len(board), len(board[0])
-    seencopy = seen.copy()
+    seencopy = set()
 
     if 0 < posx < rows -1 and 0 < posy < cols -1:
         match dir:
@@ -23,7 +25,7 @@ def is_loop(file_path, posx, posy, dir, seen):
             case "LEFT":
                 board[posx + 1][posy] = "#"
 
-    def move(posx, posy, dir, seen):
+    def move(posx, posy, dir):
         if dir == "UP":
             if board[posx-1][posy] != '#':
                 board[posx-1][posy] = '^'
@@ -64,7 +66,7 @@ def is_loop(file_path, posx, posy, dir, seen):
         return posx, posy, dir, seencopy
 
     while 0 < posx < rows -1 and 0 < posy < cols - 1:
-        posx, posy, dir, seencopy = move(posx, posy, dir, seen)
+        posx, posy, dir, seencopy = move(posx, posy, dir)
         if (posx, posy, dir) in seencopy:
             return True   
     return False
@@ -118,6 +120,8 @@ def count_loops(file_path):
                 posx -= 1
                 if is_loop(file_path, posx, posy, "RIGHT", seen) and (posx, posy, dir) not in seen:
                     count += 1
+                    loops.add((posx, posy -1))
+
                 seen.add((posx, posy, dir))
             elif board[posx-1][posy] == '#':
                 dir = 'RIGHT'
@@ -129,6 +133,7 @@ def count_loops(file_path):
                 posy += 1
                 if is_loop(file_path, posx, posy, "DOWN", seen) and (posx, posy, dir) not in seen:
                     count += 1
+                    loops.add((posx -1, posy))
                 seen.add((posx, posy, dir))
             elif board[posx][posy+1] == '#':
                 dir = 'DOWN'
@@ -140,6 +145,7 @@ def count_loops(file_path):
                 posx += 1
                 if is_loop(file_path, posx, posy, "LEFT", seen)  and (posx, posy, dir) not in seen:
                     count += 1
+                    loops.add((posx, posy + 1))
                 seen.add((posx, posy, dir))
             elif board[posx+1][posy] == '#':
                 dir = 'LEFT' 
@@ -151,6 +157,7 @@ def count_loops(file_path):
                 posy -= 1
                 if is_loop(file_path, posx, posy, "UP", seen) and (posx, posy, dir) not in seen:
                     count += 1
+                    loops.add((posx + 1, posy))
                 seen.add((posx, posy, dir))
 
             elif board[posx][posy-1] == '#':
@@ -161,3 +168,4 @@ file_path = "/Users/georgiaeick/Library/Mobile Documents/com~apple~TextEdit/Docu
 file_path_example = '/Users/georgiaeick/Library/Mobile Documents/com~apple~TextEdit/Documents/AdventOfCode_Problem6Ex.txt'
 
 print(count_loops(file_path))
+print(len(loops))
