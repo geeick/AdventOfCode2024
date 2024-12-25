@@ -56,7 +56,7 @@ def define_guard_path(file_path):
 
         elif board[posx][posy] == 'v':
             if board[posx+1][posy] != '#':
-                for column in range (posy):
+                for column in range (posy, -1, -1):
                     if board[posx+1][column] == '#':
                         if board[posx+1][column +1] == 'X':
                             count += 1
@@ -70,7 +70,7 @@ def define_guard_path(file_path):
 
         elif board[posx][posy] == '<':
             if board[posx][posy-1] != '#':
-                for row in range (posx):
+                for row in range (posx, -1, -1):
                     if board[row][posy -1] == '#':
                         if board[row + 1][posy -1] == 'X':
                             count += 1
