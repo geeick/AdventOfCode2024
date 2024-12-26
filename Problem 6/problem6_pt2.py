@@ -17,13 +17,13 @@ def is_loop(file_path, posx, posy, dir, seen):
     if 0 < posx < rows -1 and 0 < posy < cols -1:
         match dir:
             case "UP":
-                board[posx][posy - 1] = "#"
-            case "RIGHT":
                 board[posx - 1][posy] = "#"
-            case "DOWN":
+            case "RIGHT":
                 board[posx][posy + 1] = "#"
-            case "LEFT":
+            case "DOWN":
                 board[posx + 1][posy] = "#"
+            case "LEFT":
+                board[posx][posy - 1] = "#"
 
     def move(posx, posy, dir):
         if dir == "UP":
@@ -104,7 +104,7 @@ def count_loops(file_path):
                 posy = y
                 dir = "LEFT"
                 break
-            if board[x][y] == 'V':
+            if board[x][y] == 'v':
                 posx = x
                 posy = y
                 dir = "DOWN"
@@ -118,54 +118,65 @@ def count_loops(file_path):
                 board[posx-1][posy] = '^'
                 board[posx][posy] = 'X'
                 posx -= 1
-                if is_loop(file_path, posx, posy, "RIGHT", seen) and (posx, posy, dir) not in seen:
+                if is_loop(file_path, posx, posy, "UP", seen) and (posx, posy) not in loops:
                     count += 1
-                    loops.add((posx, posy -1))
-
+                    loops.add((posx -1, posy))
                 seen.add((posx, posy, dir))
             elif board[posx-1][posy] == '#':
                 dir = 'RIGHT'
+                if is_loop(file_path, posx, posy, "RIGHT", seen) and (posx, posy) not in loops:
+                    count += 1
+                    loops.add((posx, posy +1))
 
         elif dir == "RIGHT":
             if board[posx][posy+1] != '#':
                 board[posx][posy+1] = '>'
                 board[posx][posy] = 'X'
                 posy += 1
-                if is_loop(file_path, posx, posy, "DOWN", seen) and (posx, posy, dir) not in seen:
+                if is_loop(file_path, posx, posy, "RIGHT", seen) and (posx, posy) not in loops:
                     count += 1
-                    loops.add((posx -1, posy))
+                    loops.add((posx, posy +1))
                 seen.add((posx, posy, dir))
             elif board[posx][posy+1] == '#':
                 dir = 'DOWN'
+                if is_loop(file_path, posx, posy, "DOWN", seen) and (posx, posy) not in loops:
+                    count += 1
+                    loops.add((posx +1, posy))
 
         elif dir == "DOWN":
             if board[posx+1][posy] != '#':
                 board[posx+1][posy] = 'v'
                 board[posx][posy] = 'X'
                 posx += 1
-                if is_loop(file_path, posx, posy, "LEFT", seen)  and (posx, posy, dir) not in seen:
+                if is_loop(file_path, posx, posy, "DOWN", seen)  and (posx, posy) not in loops:
                     count += 1
-                    loops.add((posx, posy + 1))
+                    loops.add((posx + 1, posy))
                 seen.add((posx, posy, dir))
             elif board[posx+1][posy] == '#':
                 dir = 'LEFT' 
+                if is_loop(file_path, posx, posy, "LEFT", seen) and (posx, posy) not in loops:
+                    count += 1
+                    loops.add((posx, posy -1))
 
         elif dir == "LEFT":
             if board[posx][posy-1] != '#':
                 board[posx][posy-1] = '<'
                 board[posx][posy] = 'X'
                 posy -= 1
-                if is_loop(file_path, posx, posy, "UP", seen) and (posx, posy, dir) not in seen:
+                if is_loop(file_path, posx, posy, "LEFT", seen) and (posx, posy) not in loops:
                     count += 1
-                    loops.add((posx + 1, posy))
+                    loops.add((posx, posy - 1))
                 seen.add((posx, posy, dir))
 
             elif board[posx][posy-1] == '#':
-               dir = 'UP'                           
+               dir = 'UP'                   
+               if is_loop(file_path, posx, posy, "UP", seen) and (posx, posy) not in loops:
+                    count += 1
+                    loops.add((posx -1, posy))        
     return count
     
 file_path = "/Users/georgiaeick/Library/Mobile Documents/com~apple~TextEdit/Documents/AdventOfCode_Problem6.txt"
 file_path_example = '/Users/georgiaeick/Library/Mobile Documents/com~apple~TextEdit/Documents/AdventOfCode_Problem6Ex.txt'
 
-print(count_loops(file_path))
+count_loops(file_path)
 print(len(loops))
