@@ -1,5 +1,5 @@
 def readDiskMap(file_path):
-    diskMap = ""
+    diskMap = []
     y = 0
     try:
         with open(file_path, 'r') as file:
@@ -13,11 +13,12 @@ def readDiskMap(file_path):
         return 0
     
     for x in range (len(oldDiskMap)):
-        if x%2 == 1:
-            diskMap += int(oldDiskMap[x]) * "."
-        else:
-            y = x//2
-            diskMap += int(oldDiskMap[x]) * str(y)
+        for z in range (int(oldDiskMap[x])):
+            if x%2 == 1:
+                diskMap.append('.')
+            else:
+                y = x//2
+                diskMap.append(str(y))
 
     return diskMap
 
@@ -59,3 +60,4 @@ memory = changeMemory(file)
 print(addCheckSum(memory))
 
 ##not 90273982836 (too low)
+    
