@@ -29,24 +29,19 @@ def readDiskMap(file_path):
 
 
 def changeMemory(diskMap):
-    nFiles = 0
     fileModified = len(diskMap) -1
-    for x in range (len(diskMap)):
-        if diskMap[x][0] != ".":
-            nFiles += 1
 
     seen = {'.'}
     while fileModified > 0:
         if diskMap[fileModified][0] not in seen:
+            seen.add(diskMap[fileModified][0])
             for x in range (fileModified):
-                seen.add(diskMap[fileModified][0])
                 if diskMap[x][0] == "." and len(diskMap[x]) >= len(diskMap[fileModified]):
                     space = []
                     for var in range (len(diskMap[fileModified])):
                         temp = diskMap[x][var]
                         diskMap[x][var] = diskMap[fileModified][var]
                         diskMap[fileModified][var] = temp
-                        seen.add(diskMap[x][0])
                     for var in range (len(diskMap[x]) -1, -1, -1):
                         if diskMap[x][var] == ".":
                             space.append(".")
@@ -56,15 +51,14 @@ def changeMemory(diskMap):
                         diskMap[fileModified-1] = diskMap[fileModified-1] + diskMap[fileModified] + diskMap[fileModified +1]
                         diskMap.pop(fileModified +1)
                         diskMap.pop(fileModified)
-                        fileModified -= 2
+                        fileModified -= 1
                     elif 1 <= fileModified and diskMap[fileModified -1][0] == ".":
                         diskMap[fileModified -1] = diskMap[fileModified-1] + diskMap[fileModified]
                         diskMap.pop(fileModified)
                         fileModified -= 1
                     elif fileModified  < len(diskMap) -1 and diskMap[fileModified +1][0] == '.':
                         diskMap[fileModified] = diskMap[fileModified] + diskMap[fileModified +1]
-                        diskMap.pop(fileModified)
-                        fileModified -= 1
+                        diskMap.pop(fileModified +1)
 
                     if len(space) > 0:
                         diskMap.insert(x+1, space)
@@ -96,6 +90,9 @@ file_path_example = '/Users/georgiaeick/Library/Mobile Documents/com~apple~TextE
 
 file = readDiskMap(file_path)
 memory = changeMemory(file)
+print(memory)
 print(addCheckSum(memory))
 
 #6372379482458 is too low
+#6372379482458
+#6373055193464
