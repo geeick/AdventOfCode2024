@@ -5,27 +5,22 @@
 #ifndef ROBOT_H
 #define ROBOT_H
 
-class Grid;
-
 class Robot {
-  public:
-        // Constructor
-    Robot(Grid *m_grid, int r, int c);
 
-        // Accessors
-    int  row() const;
-    int  col() const;
+public:
 
-        // Mutators
-    void move(int dir);
-    void newPos(int row, int col);
+    // Constructor
+    Robot(int r, int c);
+    ~Robot();
 
-  private:
-    int   m_row;
-    int   m_col;
-    Grid *m_grid;
+    // Accessors
+
+
+    // Mutators
+
+
+private:
+
 };
-
-
 
 #endif //ROBOT_H

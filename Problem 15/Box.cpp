@@ -13,19 +13,7 @@ Box::Box(Grid *grid, const int r, const int c){
 }
 
 // Accessors
-int  Box::row() const{
-    return m_row;
-}
 
-int  Box::col() const{
-    return m_col;
-}
 
 // Mutators
-void Box::move(int dir){
 
-}
-
-void Box::newPos(int row, int col){
-
-}
