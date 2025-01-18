@@ -1,41 +1,42 @@
-//
-// Created by Georgia Eick on 09/01/25.
-//
+
 
 #ifndef GRID_H
 #define GRID_H
 
+#include <vector>
 
+class Box;
+class Robot;
 
 class Grid {
   public:
         // Constructor/destructor
-    Room(int nRows, int nCols);
-    ~Room();
+    explicit Grid(std::vector<std::vector<char>> &map);
+    ~Grid();
 
         // Accessors
     int     rows() const;
     int     cols() const;
-    Player* player() const;
-    int     beeCount() const;
-    int     numBeesAt(int r, int c) const;
-    bool    determineNewPosition(int& r, int& c, int dir) const;
+    std::vector<std::vector<char>> map();
+    Robot* robot() const;
+    int     boxCount() const;
+    int     numBoxesAt(int r, int c) const;
     void    display() const;
 
         // Mutators
-    bool addBee(int r, int c);
-    bool addPlayer(int r, int c);
-    bool swatBeeAt(int r, int c, int dir);
-    bool moveBees();
+    bool addBox(int r, int c);
+    bool addRobot(int r, int c);
+    bool moveRobot(int dir) const;
+    bool moveBox(int dir, int r, int c) const;
+    void runCommand(char dir) const;
 
   private:
     int     m_rows;
     int     m_cols;
-    Player* m_player;
-    Bee*    m_bees[MAXBEES];
-    int     m_nBees;
+    Robot* m_robot;
+    std::vector<Box*> m_box;
+    int     m_nBoxes;
+    std::vector<std::vector<char>> *m_map;
 };
-
-
 
 #endif //GRID_H

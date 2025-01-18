@@ -6,7 +6,7 @@
 #include <vector>   // For std::vector
 #include <string>   // For std::string
 
-#include "utilities.h"
+#include "input.h"
 
 const std::string file_path = "/Users/georgiaeick/Library/Mobile Documents/com~apple~TextEdit/Documents/AdventOfCode_Problem15.txt";
 const std::string file_path_example = "/Users/georgiaeick/Library/Mobile Documents/com~apple~TextEdit/Documents/AdventOfCode_Problem15Ex.txt";

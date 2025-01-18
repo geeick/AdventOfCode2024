@@ -4,12 +4,16 @@
 #include <string>
 #include <vector>
 
-struct Input {
+class Input {
+  	public:
     Input(const std::vector<std::vector<char>>& g, const std::string& cmds);
 
     void printGrid() const;
     void printMovements() const;
+    std::vector<std::vector<char>> getGrid();
+    std:: string getCommands();
 
+    private:
     std::vector<std::vector<char>> grid;
     std::string movements;
 };
